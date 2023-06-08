@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Github</title>
+    <link rel="stylesheet" href="./style/style.css" />
+  </head>
+  <body>
+    <div id="navbarContainer"></div>
+    <div id="resultMainContainerWrapper">
+      <div id="resultMainContainer"></div>
+    </div>
+  </body>
+</html>
+
+<script type="module">
+  import navbar from "./components/navbar.js";
+  import getUser from "./scripts/getdata.js";
+
+  let navbarDiv = document.getElementById("navbarContainer");
+  navbarDiv.innerHTML = navbar();
+
+  let ppDetails = document.getElementById("ppDetails");
+
+  let resultMainContainer = document.getElementById("resultMainContainer");
+  let resultMainContainerWrapper = document.getElementById(
+    "resultMainContainerWrapper"
+  );
+
+  var response; //makin it global to use in many functions
+
+  let input = document.getElementById("search-input");
+  input.addEventListener("keypress", searchUsers);
+
+  let btn = document.getElementById("search-button");
+  btn.addEventListener("click", searchUsers);
+
+  async function searchUsers(event) {
+    if (event.key === "Enter" || event.type == "click") {
+      let query = input.value;
+
+      response = await getUser(query);
+      console.log("response:", response.items);
+
+      resultMainContainerWrapper.style.display = "flex";
+
+      console.log("repoData:", response.items);
+
+      appendRepo(response.items);
+    }
+  }
+
+  async function getUserRepo() {}
+
+  async function appendRepo(items) {
+    resultMainContainer.innerHTML = null;
+    let searchResult = document.createElement("h3");
+    searchResult.textContent = `${items.length} Search Results`;
+    resultMainContainer.append(searchResult);
+
+    items.map((data) => {
+      console.log("results:", data);
+
+      let resultContainer = document.createElement("div");
+      resultContainer.setAttribute("id", "resultContainer");
+
+      let userDiv = document.createElement("div");
+      userDiv.setAttribute("id", "userDiv");
+
+      let avatarImg = document.createElement("img");
+      avatarImg.setAttribute("id", "avatarImg");
+      avatarImg.src = data.avatar_url;
+
+      let anchortag = document.createElement("a");
+      anchortag.href = `${data.html_url}`;
+      anchortag.appendChild(avatarImg);
+
+      let anchortagUsername = document.createElement("a");
+      anchortagUsername.href = `${data.html_url}`;
+      let userName = document.createElement(`p`);
+      userName.innerHTML = `${data.login}`;
+      anchortagUsername.appendChild(userName);
+
+      let followDiv = document.createElement("div");
+      followDiv.setAttribute("id", "followDiv");
+      let followButton = document.createElement("button");
+      followButton.innerHTML = "Follow";
+
+      userDiv.append(anchortag, anchortagUsername);
+      followDiv.append(followButton);
+      resultContainer.append(userDiv, followDiv);
+      resultMainContainer.append(resultContainer);
+    });
+  }
+</script>
