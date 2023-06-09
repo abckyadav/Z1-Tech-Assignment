@@ -24,3 +24,11 @@ profile picture of the user.
 - Clicking on the username or image will open the official github page of the user.
 - API Documentation -
 https://docs.github.com/en/rest/reference/search#search-users
+
+
+# Working Flow
+
+- Search any username or keyword in search box
+- Results will be displayed below
+- Click on any username or profile picture
+- Original Github website will open with user profile section
